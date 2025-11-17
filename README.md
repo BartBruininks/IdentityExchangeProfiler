@@ -39,4 +39,4 @@ analysis.plot(dt=dt)
 ```
 
 ## Check examples
-A more detailed usecase is given in the ./examples.
+A more detailed [usecase](https://github.com/BartBruininks/IdentityExchangeProfiler/blob/main/examples/lipid_exchange.ipynb) is given in the `./examples`.
