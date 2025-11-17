@@ -40,5 +40,8 @@ analysis.compute()
 analysis.plot(dt=dt)
 ```
 
+<img width="1490" height="590" alt="Untitled" src="https://github.com/user-attachments/assets/d2571b2f-ef39-40ea-bdac-9c9ade5f401e" />
+
+
 ## Check examples
 A more detailed [usecase](https://github.com/BartBruininks/IdentityExchangeProfiler/blob/main/examples/lipid_exchange.ipynb) is given in the `./examples`.
