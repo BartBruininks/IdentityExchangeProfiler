@@ -1,0 +1,8 @@
+*/__pycache__/*
+identity_exchange_profiler/__pycache__/*
+*.ipynb_checkpoints
+*identity_exchange_profiler.egg-info
+*cpython
+build
+*.c
+*.so
