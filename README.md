@@ -36,7 +36,7 @@ analysis = iep.Profiler(
 analysis.compute()
 
 # Plot the results
-analysis.plot(dt=dt)
+plot = analysis.plot(dt=dt)
 ```
 
 <img width="1490" height="590" alt="Untitled" src="https://github.com/user-attachments/assets/d2571b2f-ef39-40ea-bdac-9c9ade5f401e" />
