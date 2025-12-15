@@ -59,14 +59,14 @@ class Profiler:
     @staticmethod
     def filter_close_events(data, threshold):
         """
-        Vectorized filter for events that are close together and have opposite directions.
+        Vectorized filter for events that are close together in frames and have opposite directions.
 
         Parameters
         ----------
         data : np.ndarray
             Array with columns: [start, stop, dt, direction, trace_id]
         threshold : int
-            Maximum time gap between events to consider for filtering
+            Minimum time gap between events to pass filtering
 
         Returns
         -------
