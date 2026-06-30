@@ -73,40 +73,79 @@ class Profiler:
     @staticmethod
     def filter_close_events(data, threshold):
         """
-        Vectorized filter for events that are close together in frames and have opposite directions.
+        Remove short-time back-and-forth flip events within each trace.
+
+        Within each trace (trace_id), consecutive events are grouped if they occur
+        close in time (gap = next_start - prev_stop <= threshold) and have opposite
+        directions (direction sign differs).
+
+        If the number of grouped events is even, the entire group is removed
+        (net direction change = 0). If the number is odd, only the last event is kept
+        to preserve the net change.
 
         Parameters
         ----------
         data : np.ndarray
-            Array with columns: [start, stop, dt, direction, trace_id]
+            Array with columns [start, stop, dt, direction, trace_id].
         threshold : int
-            Minimum time gap between events to pass filtering
+            Maximum allowed gap (in frames) between consecutive events to be grouped.
 
         Returns
         -------
         np.ndarray
-            Filtered array with close opposite-direction pairs removed
+            Filtered event array.
         """
-        if data is None or len(data) == 0:
+        if len(data) == 0:
             return data
 
         sort_idx = np.lexsort((data[:, 0], data[:, 4]))
         sorted_data = data[sort_idx]
 
-        same_trace = sorted_data[:-1, 4] == sorted_data[1:, 4]
-        gaps = sorted_data[1:, 0] - sorted_data[:-1, 1]
-        opposite_dir = sorted_data[:-1, 3] != sorted_data[1:, 3]
-
-        pairs_to_remove = same_trace & (gaps < threshold) & opposite_dir
-
         keep_mask = np.ones(len(sorted_data), dtype=bool)
-        keep_mask[:-1] &= ~pairs_to_remove
-        keep_mask[1:] &= ~pairs_to_remove
+
+        n = len(sorted_data)
+        i = 0
+        while i < n:
+            tid = sorted_data[i, 4]
+
+            # trace slice [i, j)
+            j = i
+            while j < n and sorted_data[j, 4] == tid:
+                j += 1
+
+            # scan within trace
+            k = i
+            while k < j:
+                run_start = k
+                run_end = k
+
+                # grow alternation run: (gap <= threshold) AND (opposite direction)
+                while run_end + 1 < j:
+                    gap = sorted_data[run_end + 1, 0] - sorted_data[run_end, 1]
+                    opp = (sorted_data[run_end + 1, 3] != sorted_data[run_end, 3])
+                    if (gap <= threshold) and opp:
+                        run_end += 1
+                    else:
+                        break
+
+                run_len = run_end - run_start + 1
+
+                if run_len >= 2:
+                    if run_len % 2 == 0:
+                        keep_mask[run_start:run_end + 1] = False
+                    else:
+                        keep_mask[run_start:run_end] = False
+                        keep_mask[run_end] = True
+
+                k = run_end + 1
+
+            i = j
 
         filtered_sorted = sorted_data[keep_mask]
         original_order = np.argsort(sort_idx[keep_mask])
 
         return filtered_sorted[original_order]
+
 
     @property
     def segmentation(self):
