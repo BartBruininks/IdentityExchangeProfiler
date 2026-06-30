@@ -1,3 +1,4 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21070277.svg)](https://doi.org/10.5281/zenodo.21070277)
 # Identity Exchange Profiler (IEP)
 Using segmentation data, like the leaflet identity per lipid over time, the lipid flip-flop can be profiled in an efficient and precise manner. The two labels of interest should be specified, in the case of lipid flip-flop, these would be the labels for the outer and inner leaflets. The segmentation can be obtained using [MDVoxelSegmentation](https://github.com/marrink-lab/MDVoxelSegmentation)).
 
